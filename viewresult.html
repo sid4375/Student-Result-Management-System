@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Student Result</title>
+</head>
+<body>
+    <h1>View Student Result</h1>
+    <form method="get" action="view_result.php">
+        <label for="student_id">Student ID:</label>
+        <input type="text" name="student_id" required>
+        <input type="submit" value="View Result">
+    </form>
+
+    <h1>Student Result</h1>
+    <table border="1">
+        <tr>
+            <th>Subject</th>
+            <th>Score</th>
+        </tr>
+        <?php
+        // PHP code to retrieve and display a specific student's results
+        if (isset($_GET['student_id'])) {
+            $student_id = $_GET['student_id'];
+            $conn = mysqli_connect("localhost", "root", "tED-8!MZ1BrtG*!e", "studentresultmanagementdb");
+
+            if (!$conn) {
+                die("Connection failed: " . mysqli_connect_error());
+            }
+
+            $sql = "SELECT subject, score FROM results WHERE student_id = $student_id";
+            $result = mysqli_query($conn, $sql);
+
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>";
+                    echo "<td>" . $row['subject'] . "</td>";
+                    echo "<td>" . $row['score'] . "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='2'>No results found for this student.</td></tr>";
+            }
+
+            mysqli_close($conn);
+        }
+        ?>
+    </table>
+</body>
+</html>
